@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>画像加工サイト</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h1>画像加工サイト</h1>
+  <input type="file" id="imageLoader" accept="image/*">
+  <button id="save">保存</button>
+  <button id="reset">リセット</button>
+</header>
+
+<main>
+  <!-- 左 -->
+  <aside id="leftPanel"> 
+    <label>トーンカーブ</label>
+
+    <!-- トーンカーブUI -->
+    <div id="toneCurvePanel">
+      <canvas id="curveCanvas" width="256" height="256"></canvas>
+    </div>
+
+
+<!-- 色調補正UI -->
+<div id="colorAdjustPanel" class="panel vertical-controls">
+  <h2>色調補正</h2>
+
+  <!-- 明度 -->
+  <div class="control">
+    <label for="brightnessRange" class="control__label">明度</label>
+    <input
+      type="range"
+      id="brightness"
+      class="control__range"
+      min="-100" max="100" value="0" step="1"
+      aria-labelledby="brightnessLabel"
+    />
+    <input
+      type="number"
+      id="brightnessNumber"
+      class="control__number"
+      min="-100" max="100" value="0" step="1"
+      aria-label="明度の数値入力"
+    />
+  </div>
+
+    <!-- 彩度 -->
+  <div class="control">
+    <label for="saturationRange" class="control__label">彩度</label>
+    <input
+      type="range"
+      id="saturation"
+      class="control__range"
+      min="-100" max="100" value="0" step="1"
+      aria-labelledby="saturationLabel"
+    />
+    <input
+      type="number"
+      id="saturationNumber"
+      class="control__number"
+      min="-100" max="100" value="0" step="1"
+      aria-label="彩度の数値入力"
+    />
+  </div>
+
+  <div class="control">
+    
+<div class="control">
+  <label for="hue" class="control__label">色相</label>
+  <input
+    type="range"
+    id="hue"
+    class="control__range"
+    min="-180" max="180" value="0" step="1"
+    aria-label="色相"
+  />
+  <input
+    type="number"
+    id="hueNumber"
+    class="control__number"
+    min="-180" max="180" value="0" step="1"
+    aria-label="色相の数値入力"
+  />
+</div>
+
+
+  </div>
+  <!-- コントラスト -->
+  <div class="control">
+    <label for="contrastRange" class="control__label">コントラスト</label>
+    <input
+      type="range"
+      id="contrast"
+      class="control__range"
+      min="-100" max="100" value="0" step="1"
+      aria-labelledby="contrastLabel"
+    />
+    <input
+      type="number"
+      id="contrastNumber"
+      class="control__number"
+      min="-100" max="100" value="0" step="1"
+      aria-label="コントラストの数値入力"
+    />
+  </div>
+
+
+</div>
+
+
+<div class="panel levelPanel">
+  <h2>レベル補正</h2>
+
+  <label>
+    黒側
+    <input type="range" id="levelBlack" min="0" max="254" value="0">
+    <span id="levelBlackValue">0</span>
+  </label>
+
+  <label>
+    中間
+    <input type="range" id="levelMid" min="0.2" max="5.0" step="0.01" value="1.0">
+    <span id="levelMidValue">1.00</span>
+  </label>
+
+  <label>
+    白側
+    <input type="range" id="levelWhite" min="1" max="255" value="255">
+    <span id="levelWhiteValue">255</span>
+  </label>
+</div>
+
+  </aside>
+
+  <!-- 中央 -->
+  <section id="canvasArea">
+    <canvas id="imageCanvas"></canvas>
+  </section>
+
+  <!-- 右 -->
+  <aside id="rightPanel">
+    フィルター
+  </aside>
+</main>
+
+  <script src="script.js"></script>
+  </body>
+</html>

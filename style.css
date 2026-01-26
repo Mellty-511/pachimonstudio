@@ -1,0 +1,142 @@
+body {
+  margin: 0;
+  background: #e7e7e5;
+  color: #000000;
+  font-family: sans-serif;
+  height: 100vh;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #e7e7e5;
+  border-bottom: 1px solid #000000;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 260px 1fr 240px;
+  height: calc(100vh - 50px);
+}
+
+aside {
+  background: #e7e7e5;
+  border-right: 1px solid #333;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+#rightPanel {
+  border-left: 1px solid #333;
+}
+
+#canvasArea {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  background: #e7e7e5;
+}
+
+#imageCanvas {
+  max-width: 100vw;
+  max-height: 100vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  background: #666;
+}
+
+#curveCanvas {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #e7e7e5;
+  border: 1px solid #444;
+}
+
+.controls {
+  position: sticky;
+  top: 0;
+  background: #e7e7e5;
+  padding: 10px 0;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+
+
+canvas {
+  border: 1px solid #444;
+  max-width: 100%;
+}
+
+.panel {
+  border: 1px solid #333;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #e7e7e5;
+}
+
+.panel h2 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #000000;
+}
+
+.panel label {
+  display: flex;
+  flex-direction: row; /* inputと数値を横並びのまま */
+  margin-bottom: 10px;
+}
+
+#colorAdjustPanel {
+  display: flex;
+  flex-direction: column; /* これで3項目が縦並びになる */
+  gap: 10px;
+}
+
+.panel input[type="range"] {
+  accent-color: #0a84ff; /* 青 */
+}
+
+}
+
+#curveCanvas {
+  border: 1px solid #aaa;
+  cursor: crosshair;
+}
+
+.vertical-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.control__range {
+  width: 100%;
+}
+
+.control__label {
+  text-align: right;
+  font-size: 13px;
+  color: #000;
+}
+
+.levelPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;              
+}
+
+.levelPanel label {
+  display: flex;
+  flex-direction: row; /* input と値を横並びのまま */
+  align-items: center;
+  gap: 8px;
+}
