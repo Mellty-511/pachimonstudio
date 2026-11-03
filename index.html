@@ -6,149 +6,210 @@
   <title>画像加工サイト</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <header>
   <h1>画像加工サイト</h1>
   <input type="file" id="imageLoader" accept="image/*">
+  <span id="imageInfo" class="image-info"></span>
+  <div class="header-sep"></div>
+  <button id="undoBtn" disabled title="元に戻す (Ctrl+Z)">↩</button>
+  <button id="redoBtn" disabled title="やり直す (Ctrl+Y)">↪</button>
+  <div class="header-sep"></div>
   <button id="save">保存</button>
   <button id="reset">リセット</button>
 </header>
 
 <main>
   <!-- 左 -->
-  <aside id="leftPanel"> 
-    <label>トーンカーブ</label>
-
-    <!-- トーンカーブUI -->
+  <aside id="leftPanel">
+    <label class="panel-label">トーンカーブ</label>
     <div id="toneCurvePanel">
       <canvas id="curveCanvas" width="256" height="256"></canvas>
+      <p class="hint">線をドラッグして変形 / 右クリックで点を削除</p>
     </div>
 
+    <div class="panel" id="penPanel">
+      <h2>ペン調整</h2>
+      <label class="radio-row"><input type="checkbox" id="penToggle"> 画像をなぞってカーブを調整</label>
+      <div class="control">
+        <label class="control__label short" style="min-width:40px">サイズ</label>
+        <input type="range"  id="penSize"       class="control__range"  min="1" max="200" value="30" step="1">
+        <input type="number" id="penSizeNumber" class="control__number" min="1" max="200" value="30" step="1">
+      </div>
+      <div class="pen-readout" id="penReadout">―</div>
+      <p class="hint">ONにして画像をクリックし、上へドラッグで明るく、下へで暗く。円の中にある明るさの範囲（カーブ上の黄色い帯）をまとめて動かします。サイズを大きくするほど、動く範囲が広がります。<br>[ ] キーでサイズ変更 / Shiftで微調整</p>
+    </div>
 
-<!-- 色調補正UI -->
-<div id="colorAdjustPanel" class="panel vertical-controls">
-  <h2>色調補正</h2>
+    <div id="colorAdjustPanel" class="panel vertical-controls">
+      <h2>色調補正</h2>
+      <div class="control">
+        <label class="control__label">明度</label>
+        <input type="range"  id="brightness"       class="control__range" min="-100" max="100" value="0" step="1">
+        <input type="number" id="brightnessNumber" class="control__number" min="0" max="255" value="128" step="1">
+      </div>
+      <div class="control">
+        <label class="control__label">彩度</label>
+        <input type="range"  id="saturation"       class="control__range" min="-100" max="100" value="0" step="1">
+        <input type="number" id="saturationNumber" class="control__number" min="0" max="255" value="128" step="1">
+      </div>
+      <div class="control">
+        <label class="control__label">色相</label>
+        <input type="range"  id="hue"       class="control__range" min="-180" max="180" value="0" step="1">
+        <input type="number" id="hueNumber" class="control__number" min="-180" max="180" value="0" step="1">
+      </div>
+      <div class="control">
+        <label class="control__label">コントラスト</label>
+        <input type="range"  id="contrast"       class="control__range" min="-100" max="100" value="0" step="1">
+        <input type="number" id="contrastNumber" class="control__number" min="0" max="255" value="128" step="1">
+      </div>
+    </div>
 
-  <!-- 明度 -->
-  <div class="control">
-    <label for="brightnessRange" class="control__label">明度</label>
-    <input
-      type="range"
-      id="brightness"
-      class="control__range"
-      min="-100" max="100" value="0" step="1"
-      aria-labelledby="brightnessLabel"
-    />
-    <input
-      type="number"
-      id="brightnessNumber"
-      class="control__number"
-      min="-100" max="100" value="0" step="1"
-      aria-label="明度の数値入力"
-    />
-  </div>
-
-    <!-- 彩度 -->
-  <div class="control">
-    <label for="saturationRange" class="control__label">彩度</label>
-    <input
-      type="range"
-      id="saturation"
-      class="control__range"
-      min="-100" max="100" value="0" step="1"
-      aria-labelledby="saturationLabel"
-    />
-    <input
-      type="number"
-      id="saturationNumber"
-      class="control__number"
-      min="-100" max="100" value="0" step="1"
-      aria-label="彩度の数値入力"
-    />
-  </div>
-
-  <div class="control">
-    
-<div class="control">
-  <label for="hue" class="control__label">色相</label>
-  <input
-    type="range"
-    id="hue"
-    class="control__range"
-    min="-180" max="180" value="0" step="1"
-    aria-label="色相"
-  />
-  <input
-    type="number"
-    id="hueNumber"
-    class="control__number"
-    min="-180" max="180" value="0" step="1"
-    aria-label="色相の数値入力"
-  />
-</div>
-
-
-  </div>
-  <!-- コントラスト -->
-  <div class="control">
-    <label for="contrastRange" class="control__label">コントラスト</label>
-    <input
-      type="range"
-      id="contrast"
-      class="control__range"
-      min="-100" max="100" value="0" step="1"
-      aria-labelledby="contrastLabel"
-    />
-    <input
-      type="number"
-      id="contrastNumber"
-      class="control__number"
-      min="-100" max="100" value="0" step="1"
-      aria-label="コントラストの数値入力"
-    />
-  </div>
-
-
-</div>
-
-
-<div class="panel levelPanel">
-  <h2>レベル補正</h2>
-
-  <label>
-    黒側
-    <input type="range" id="levelBlack" min="0" max="254" value="0">
-    <span id="levelBlackValue">0</span>
-  </label>
-
-  <label>
-    中間
-    <input type="range" id="levelMid" min="0.2" max="5.0" step="0.01" value="1.0">
-    <span id="levelMidValue">1.00</span>
-  </label>
-
-  <label>
-    白側
-    <input type="range" id="levelWhite" min="1" max="255" value="255">
-    <span id="levelWhiteValue">255</span>
-  </label>
-</div>
-
+    <div class="panel levelPanel">
+      <h2>レベル補正</h2>
+      <label>黒側 <input type="range" id="levelBlack" min="0" max="254" value="0"> <span id="levelBlackValue">0</span></label>
+      <label>中間 <input type="range" id="levelMid" min="0.2" max="5.0" step="0.01" value="1.0"> <span id="levelMidValue">1.00</span></label>
+      <label>白側 <input type="range" id="levelWhite" min="1" max="255" value="255"> <span id="levelWhiteValue">255</span></label>
+    </div>
   </aside>
 
   <!-- 中央 -->
   <section id="canvasArea">
-    <canvas id="imageCanvas"></canvas>
+    <div class="canvas-stack">
+      <canvas id="imageCanvas"></canvas>
+      <canvas id="glCanvas"></canvas>
+      <canvas id="penOverlay"></canvas>
+    </div>
   </section>
 
   <!-- 右 -->
   <aside id="rightPanel">
-    フィルター
+    <div class="panel" id="renderModePanel">
+      <h2>処理方式</h2>
+      <label class="radio-row"><input type="radio" name="renderMode" id="modeGPU" value="gpu" checked> GPU（WebGL）</label>
+      <label class="radio-row"><input type="radio" name="renderMode" id="modeCPU" value="cpu"> CPU</label>
+      <button id="benchmarkBtn" type="button">CPU / GPU 比較計測</button>
+      <div class="timing-display">
+        <div>GPU: <span id="gpuTimeValue">―</span> ms</div>
+        <div>CPU: <span id="cpuTimeValue">―</span> ms</div>
+      </div>
+      <p class="gpu-status-note" id="gpuStatusNote"></p>
+    </div>
+
+    <div class="panel" id="stylePanel">
+      <h2>スタイル転写</h2>
+      <input type="file" id="styleRef" accept="image/*">
+      <canvas id="styleRefThumb"></canvas>
+      <p class="hint" id="styleStatus">参照画像を選ぶと、階調はトーンカーブ、色相は色相別補正、色味はグラデーションマップに設定されます（あとから編集できます）。</p>
+      <div class="control">
+        <label class="control__label">階調</label>
+        <input type="range"  id="styleTone"       class="control__range"  min="0" max="100" value="100" step="1">
+        <input type="number" id="styleToneNumber" class="control__number" min="0" max="100" value="100" step="1">
+      </div>
+      <div class="control">
+        <label class="control__label">色相</label>
+        <input type="range"  id="styleHue"       class="control__range"  min="0" max="100" value="100" step="1">
+        <input type="number" id="styleHueNumber" class="control__number" min="0" max="100" value="100" step="1">
+      </div>
+      <div class="control">
+        <label class="control__label">色味</label>
+        <input type="range"  id="styleColor"       class="control__range"  min="0" max="100" value="25" step="1">
+        <input type="number" id="styleColorNumber" class="control__number" min="0" max="100" value="25" step="1">
+      </div>
+      <button id="styleApply" type="button">この画像に再適用</button>
+    </div>
+
+    <div class="panel" id="filterPanel">
+      <h2>フィルター</h2>
+
+      <div class="filter-section">
+        <div class="filter-title">シャープネス</div>
+        <div class="control">
+          <input type="range"  id="sharpness"       class="control__range" min="0" max="100" value="0" step="1">
+          <input type="number" id="sharpnessNumber" class="control__number" min="0" max="100" value="0" step="1">
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-title">ガウスぼかし</div>
+        <div class="control">
+          <input type="range"  id="blur"       class="control__range" min="0" max="20" value="0" step="0.5">
+          <input type="number" id="blurNumber" class="control__number" min="0" max="20" value="0" step="0.5">
+        </div>
+        <p class="hint">半径（px）。大きいほど強くぼかします。0でオフ</p>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-title">グラデーションマップ</div>
+        <canvas id="gradMapCanvas" width="256" height="40"></canvas>
+        <p class="hint">点をクリック: 色を変更 / ドラッグ: 移動<br>空白をクリック: 点を追加 / 右クリック: 削除</p>
+        <div class="control gm-color">
+          <label class="control__label" for="gradMapColorPicker">選択中の点の色</label>
+          <input type="color" id="gradMapColorPicker" value="#ffffff" disabled>
+        </div>
+        <select id="gradMapPreset">
+          <option value="">プリセット選択...</option>
+          <option value="sepia">セピア</option>
+          <option value="warm">暖色系</option>
+          <option value="cool">冷色系</option>
+          <option value="sunset">夕焼け</option>
+          <option value="duotone">デュオトーン（青→黄）</option>
+        </select>
+        <div class="control gm-opacity">
+          <label class="control__label">不透明度</label>
+          <input type="range"  id="gradMapOpacity"       class="control__range" min="0" max="100" value="0" step="1">
+          <input type="number" id="gradMapOpacityNumber" class="control__number" min="0" max="100" value="0" step="1">
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-title">色相別補正</div>
+        <div class="graph-title">色相のずれ（上げ下げで、その色の色相を回す）</div>
+        <canvas id="hueGraph" class="band-graph" width="216" height="84"></canvas>
+        <div class="graph-title">彩度（上げ下げで、その色の鮮やかさを変える）</div>
+        <canvas id="satGraph" class="band-graph" width="216" height="84"></canvas>
+        <p class="hint">下の色帯の位置が元の色相です。点を上下にドラッグ / ダブルクリックで0に戻す</p>
+        <button id="hueBandsReset" type="button">色相別補正をリセット</button>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-title">色収差</div>
+        <div class="control">
+          <label class="control__label short">横</label>
+          <input type="range"  id="caX"       class="control__range" min="-30" max="30" value="0" step="1">
+          <input type="number" id="caXNumber" class="control__number" min="-30" max="30" value="0" step="1">
+        </div>
+        <div class="control">
+          <label class="control__label short">縦</label>
+          <input type="range"  id="caY"       class="control__range" min="-30" max="30" value="0" step="1">
+          <input type="number" id="caYNumber" class="control__number" min="-30" max="30" value="0" step="1">
+        </div>
+        <p class="hint">赤と青を逆方向にずらします（単位: px）</p>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-title">線画抽出</div>
+        <div class="control">
+          <label class="control__label">適用量</label>
+          <input type="range"  id="lineArtAmount"       class="control__range" min="0" max="100" value="0" step="1">
+          <input type="number" id="lineArtAmountNumber" class="control__number" min="0" max="100" value="0" step="1">
+        </div>
+        <div class="control">
+          <label class="control__label">感度</label>
+          <input type="range"  id="lineArtSens"       class="control__range" min="0" max="100" value="50" step="1">
+          <input type="number" id="lineArtSensNumber" class="control__number" min="0" max="100" value="50" step="1">
+        </div>
+        <div class="control">
+          <label class="control__label">しきい値</label>
+          <input type="range"  id="lineArtThresh"       class="control__range" min="0" max="100" value="15" step="1">
+          <input type="number" id="lineArtThreshNumber" class="control__number" min="0" max="100" value="15" step="1">
+        </div>
+        <p class="hint">色調補正後の画像から輪郭だけを抜き出し、白地に黒線で表示します。適用量100で線画のみになります。</p>
+      </div>
+    </div>
   </aside>
 </main>
 
-  <script src="script.js"></script>
-  </body>
+<script src="script.js"></script>
+</body>
 </html>

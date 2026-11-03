@@ -1,142 +1,209 @@
 body {
   margin: 0;
   background: #e7e7e5;
-  color: #000000;
+  color: #000;
   font-family: sans-serif;
   height: 100vh;
 }
 
+/* ── ヘッダー ── */
 header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 6px;
+  padding: 6px 12px;
   background: #e7e7e5;
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid #000;
+  height: 38px;
+  box-sizing: border-box;
 }
+header h1 { font-size: 14px; margin: 0; white-space: nowrap; }
+.header-sep { width: 1px; height: 20px; background: #aaa; margin: 0 4px; }
 
+/* ── レイアウト ── */
 main {
   display: grid;
   grid-template-columns: 260px 1fr 240px;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 38px);
 }
 
 aside {
   background: #e7e7e5;
-  border-right: 1px solid #333;
   padding: 10px;
   overflow-y: auto;
 }
+#leftPanel  { border-right: 1px solid #333; }
+#rightPanel { border-left:  1px solid #333; }
 
-#rightPanel {
-  border-left: 1px solid #333;
-}
-
+/* ── キャンバスエリア ── */
 #canvasArea {
-  width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-
   background: #e7e7e5;
 }
 
-#imageCanvas {
-  max-width: 100vw;
-  max-height: 100vh;
+.canvas-stack {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#imageCanvas, #glCanvas {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 38px);
   width: auto;
   height: auto;
-  object-fit: contain;
   background: #666;
+  outline: 1px solid #444;     /* border だと枠の分だけ表示エリアからはみ出し、ペンの位置もずれるため outline にする */
 }
 
-#curveCanvas {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  background: #e7e7e5;
-  border: 1px solid #444;
+#glCanvas {
+  position: absolute;
+  top: 0; left: 0;
 }
 
-.controls {
-  position: sticky;
-  top: 0;
-  background: #e7e7e5;
-  padding: 10px 0;
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
+.layer-hidden { visibility: hidden; }
 
-
-
-canvas {
-  border: 1px solid #444;
-  max-width: 100%;
-}
-
+/* ── パネル共通 ── */
 .panel {
   border: 1px solid #333;
   padding: 10px;
   margin-bottom: 10px;
   background: #e7e7e5;
 }
+.panel h2 { margin: 0 0 8px; font-size: 13px; }
+.panel-label { font-size: 12px; display: block; margin-bottom: 4px; }
 
-.panel h2 {
-  margin: 0 0 10px;
-  font-size: 14px;
-  color: #000000;
-}
-
-.panel label {
-  display: flex;
-  flex-direction: row; /* inputと数値を横並びのまま */
-  margin-bottom: 10px;
-}
-
-#colorAdjustPanel {
-  display: flex;
-  flex-direction: column; /* これで3項目が縦並びになる */
-  gap: 10px;
-}
-
-.panel input[type="range"] {
-  accent-color: #0a84ff; /* 青 */
-}
-
-}
-
+/* ── トーンカーブ ── */
 #curveCanvas {
+  width: 100%;
+  aspect-ratio: 1;
   border: 1px solid #aaa;
+  cursor: crosshair;
+  display: block;
+}
+
+/* ── スライダー行 ── */
+.vertical-controls { display: flex; flex-direction: column; gap: 6px; }
+
+.control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.control__label  { font-size: 12px; white-space: nowrap; min-width: 68px; }
+.control__range  { flex: 1; min-width: 0; }
+.control__number { width: 46px; font-size: 12px; padding: 1px 2px; flex-shrink: 0; }
+
+.panel input[type="range"] { accent-color: #0a84ff; }
+
+/* ── レベル補正 ── */
+.levelPanel { display: flex; flex-direction: column; gap: 8px; }
+.levelPanel label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.levelPanel input[type="range"] { flex: 1; }
+.levelPanel span { font-size: 11px; min-width: 30px; text-align: right; }
+
+/* ── ヒントテキスト ── */
+.hint { margin: 4px 0 0; font-size: 10px; color: #666; }
+
+/* ── 右パネル: 処理方式 ── */
+.radio-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+  font-size: 12px;
+}
+#benchmarkBtn {
+  width: 100%;
+  margin: 4px 0 8px;
+  padding: 5px 0;
+  font-size: 12px;
+  cursor: pointer;
+}
+.timing-display { font-size: 12px; font-family: monospace; line-height: 1.8; }
+.gpu-status-note { margin: 6px 0 0; font-size: 10px; color: #a33; }
+
+/* ── 右パネル: フィルター ── */
+.filter-section {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #ccc;
+}
+.filter-section:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+.filter-title { font-size: 12px; font-weight: bold; margin-bottom: 6px; color: #333; }
+
+/* グラデーションマップキャンバス */
+#gradMapCanvas {
+  display: block;
+  width: 100%;
+  height: 40px;
+  border: 1px solid #777;
   cursor: crosshair;
 }
 
-.vertical-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.control__range {
+#gradMapPreset {
+  display: block;
   width: 100%;
+  margin-top: 6px;
+  font-size: 12px;
+  padding: 2px;
 }
 
-.control__label {
-  text-align: right;
-  font-size: 13px;
-  color: #000;
-}
+.gm-opacity { margin-top: 8px; }
 
-.levelPanel {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;              
+/* ── グラデーションマップ: 選択中の点の色 ── */
+.gm-color { margin-top: 8px; }
+#gradMapColorPicker {
+  width: 44px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid #777;
+  background: none;
+  cursor: pointer;
 }
+#gradMapColorPicker:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.levelPanel label {
-  display: flex;
-  flex-direction: row; /* input と値を横並びのまま */
-  align-items: center;
-  gap: 8px;
+/* ── 色収差 ── */
+.control__label.short { min-width: 28px; }
+
+/* ── ペン調整 ── */
+#penOverlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  touch-action: none;
 }
+#penOverlay.active { pointer-events: auto; cursor: none; }
+.pen-readout { font-family: monospace; font-size: 12px; margin-top: 6px; min-height: 16px; }
+
+/* ── スタイル転写 ── */
+#styleRef { width: 100%; font-size: 11px; }
+#styleRefThumb { display: none; width: 100%; height: auto; border: 1px solid #777; margin-top: 6px; }
+#styleApply { width: 100%; margin-top: 6px; padding: 4px 0; font-size: 12px; cursor: pointer; }
+
+/* ── 色相別補正 ── */
+.graph-title { font-size: 11px; color: #444; margin-top: 6px; }
+.band-graph {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #777;
+  margin-top: 3px;
+  cursor: ns-resize;
+  touch-action: none;
+}
+#hueBandsReset { width: 100%; margin-top: 6px; padding: 4px 0; font-size: 12px; cursor: pointer; }
+
+/* ── 画像サイズ表示 ── */
+.image-info { font-size: 12px; color: #444; white-space: nowrap; }
